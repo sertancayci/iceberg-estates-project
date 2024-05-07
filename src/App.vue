@@ -1,7 +1,23 @@
 <template>
   <div>
-    <AppointmentsHeader  @selected-agents-change="handleSelectedAgents" @status-change="handleStatusChange" @date-change="handleDateChange"
-    @search="handleSearch" />
+    <Header @selected-agents-change="handleSelectedAgents" @status-change="handleStatusChange"
+      @date-change="handleDateChange" @search="handleSearch" />
+    <hr class="h-2 mx-5" />
+
+    <div class="flex justify-between items-center mx-5 my-4">
+
+      <h2 class="text-xl font-semibold text-gray-900">{{ totalAppointment }} Appointments</h2>
+      <button  @click="showModal = true" class="bg-[#ec1e80] text-white px-4 py-2 font-semibold rounded-md flex justify-between">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+          class="w-6 h-6 mr-4">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+        </svg>
+
+        Create Appointment</button>
+      <create-appointment-modal :isVisible="showModal" @close="showModal = false"
+        @submit="handleCreate"></create-appointment-modal>
+    </div>
+
     <div class="my-4 mx-5">
       <AppointmentRow v-for="appointment in records" :key="appointment.id" :appointment="appointment" />
       <div v-if="!records" class="text-center text-gray-600 my-4">
@@ -16,13 +32,15 @@
 import { ref, computed, onMounted, watch } from 'vue';
 import AirtableService from './api/AirtableService';
 import AppointmentRow from './components/AppointmentRow.vue';
-import AppointmentsHeader from './components/AppointmentsHeader.vue';
+import Header from './components/Header.vue';
 import Pagination from './components/Pagination.vue';
+import CreateAppointmentModal from './components/CreateAppointmentModal.vue';
 
 export default {
-  components: { AppointmentRow, AppointmentsHeader, Pagination },
+  components: { AppointmentRow, Header, Pagination, CreateAppointmentModal },
   setup() {
     const records = ref([]);
+    const totalAppointment = ref(0);
     const totalPages = ref(0);
     const currentPage = ref(1);
     const hasNext = ref(false);
@@ -32,6 +50,14 @@ export default {
     const selectedStatus = ref('all');
     const selectedDates = ref({ startDate: null, endDate: null });
     const searchTerm = ref('');
+
+    const showModal = ref(false);
+
+    const handleCreate = (formData) => {
+      console.log('Form data submitted:', formData);
+      showModal.value = false;
+      // Here you would handle the API call to create an appointment
+    };
 
     const fetchRecords = async (page) => {
       const offset = offsets.value[page - 1] || '';
@@ -72,8 +98,11 @@ export default {
       });
 
       if (response.records.length > 0) {
+        console.log("total records", response.totalRecords);
         appointments = response.records;
         records.value = response.records;
+        totalAppointment.value = response.totalRecords;
+        totalPages.value = Math.ceil(response.totalRecords / 10);
         offsets.value[page] = response.offset;
         hasNext.value = !!response.offset
       } else {
@@ -98,14 +127,14 @@ export default {
     const handleSelectedAgents = (agentIds) => {
       selectedAgentIds.value = agentIds;
       console.log("Selected Agent IDs updated:", selectedAgentIds.value);
-      calculateTotalPages();
+      // calculateTotalPages();
       fetchRecords(currentPage.value);  // Trigger re-fetching or just re-filtering depending on setup
     };
 
     const handleStatusChange = (status) => {
       selectedStatus.value = status;
       console.log("Selected status updated:", selectedStatus.value);
-      calculateTotalPages();
+      // calculateTotalPages();
       fetchRecords();
     }
 
@@ -114,36 +143,26 @@ export default {
       fetchRecords(currentPage.value);
     };
 
-    const calculateTotalPages = async () => {
-      const totalRecords = await AirtableService.getTotalRecords('Appointments', {
-        agentIds: selectedAgentIds.value,
-        filterStatus: selectedStatus.value === 'all' ? '' : selectedStatus.value === 'cancelled' ? `{is_cancelled} = TRUE()` :
-          selectedStatus.value === 'upcoming' ? `AND({is_cancelled} != TRUE(), {appointment_date} > NOW())` :
-            `AND({is_cancelled} != TRUE(), {appointment_date} <= NOW())`
-      });
-      console.log("Total records:", totalRecords);
-      totalPages.value = Math.ceil(totalRecords / 10);
-    };
 
     watch(selectedAgentIds, () => {
       // Reset pagination possibly
       currentPage.value = 1;
-      calculateTotalPages();
+      // calculateTotalPages();
       fetchRecords(currentPage.value);  // Refetch records with the new agent filter
     }, { immediate: true });
 
     watch(selectedStatus, () => {
-      calculateTotalPages();
+      // calculateTotalPages();
       fetchRecords(currentPage.value);
     }, { immediate: true });
 
     onMounted(async () => {
-      await calculateTotalPages();
+      // await calculateTotalPages();
       await fetchRecords(currentPage.value);
     });
 
     return {
-      records, currentPage, totalPages, hasNext, handlePageChange, handleSelectedAgents, handleStatusChange, handleDateChange, handleSearch
+      records, currentPage, totalAppointment, totalPages, hasNext, handlePageChange, handleSelectedAgents, handleStatusChange, handleDateChange, handleSearch,  showModal, handleCreate
     };
   }
 };
