@@ -7,7 +7,7 @@
 
         <div class="col-span-12 md:col-span-6 lg:col-span-2">
             <select v-model="selectedStatus" @change="handleStatusChange"
-                class="h-12 w-full rounded-lg border border-solid border-neutral-300 px-4 text-sm font-semibold">
+                class="h-12 w-full rounded-lg border border-solid border-gray-400  px-4 text-sm font-semibold">
                 <option value="all">All Statuses</option>
                 <option value="cancelled">Cancelled</option>
                 <option value="upcoming">Upcoming</option>
@@ -24,7 +24,7 @@
             </div>
         </div>
         <!-- Search Bar -->
-        <div class="relative col-span-12 md:col-span-6 lg:col-span-5 flex justify-self-end">
+        <div class="relative col-span-12 md:col-span-6 lg:col-span-5 flex justify-self-end w-[21.875rem]">
             <SearchBar @search="handleSearch" />
         </div>
     </div>
@@ -42,7 +42,8 @@ export default {
     name: 'Header',
     props: {
         handleSelectedAgentsChange: Function,
-        handleSearch: Function, // Define handleSearch as a prop
+        handleSearch: Function,
+        allAgents: Array,
     },
     components: {
         SearchBar,
@@ -55,7 +56,6 @@ export default {
             startDate: '',
             endDate: '',
             searchQuery: '',
-            allAgents: [],
             selectedAgentIds: []
         };
     },
@@ -70,6 +70,7 @@ export default {
                 this[picker].open();
             }
         },
+        
         tagClass(color) {
             return `w-10 h-10 text-xs font-bold z-0 hover:z-50 rounded-[50%] text-white relative cursor-pointer flex justify-center items-center  ${color}`;
         },
@@ -85,11 +86,6 @@ export default {
             this.$emit('status-change', this.selectedStatus);
         },
 
-        async fetchAgentDetails() {
-            this.allAgents = await AirtableService.getAgentsDetails();
-            // console.log("allAgents", this.allAgents);
-        },
-
         handleSelectedAgents(agentId) {
             const index = this.selectedAgentIds.indexOf(agentId);
             if (index === -1) {
@@ -100,6 +96,7 @@ export default {
 
             this.$emit('selected-agents-change', this.selectedAgentIds);
         },
+
         handleStartDateChange(date) {
             this.startDate = date;
             this.onDateChange();
@@ -111,10 +108,6 @@ export default {
         onDateChange() {
             this.$emit('date-change', { startDate: this.startDate, endDate: this.endDate });
         },
-    },
-
-    created() {
-        this.fetchAgentDetails();
     },
 };
 </script>

@@ -1,20 +1,24 @@
 <template>
-  <div>
-    <Header @selected-agents-change="handleSelectedAgents" @status-change="handleStatusChange"
+  <div v-if="loading" class="loading-container">
+    Loading data, please wait...
+  </div>
+  <div v-else>
+    <Header :all-agents="agents" @selected-agents-change="handleSelectedAgents" @status-change="handleStatusChange"
       @date-change="handleDateChange" @search="handleSearch" />
     <hr class="h-2 mx-5" />
 
     <div class="flex justify-between items-center mx-5 my-4">
 
       <h2 class="text-xl font-semibold text-gray-900">{{ totalAppointment }} Appointments</h2>
-      <button  @click="showModal = true" class="bg-[#ec1e80] text-white px-4 py-2 font-semibold rounded-md flex justify-between">
+      <button @click="showModal = true"
+        class="bg-[#ec1e80] text-white px-4 py-2 font-semibold rounded-md flex justify-between">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
           class="w-6 h-6 mr-4">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
         </svg>
 
         Create Appointment</button>
-      <create-appointment-modal :isVisible="showModal" @close="showModal = false"
+      <create-appointment-modal :contacts="contacts" :all-agents="agents" :isVisible="showModal" @close="showModal = false"
         @submit="handleCreate"></create-appointment-modal>
     </div>
 
@@ -40,6 +44,8 @@ export default {
   components: { AppointmentRow, Header, Pagination, CreateAppointmentModal },
   setup() {
     const records = ref([]);
+    const contacts = ref([]);
+    const agents = ref([]);
     const totalAppointment = ref(0);
     const totalPages = ref(0);
     const currentPage = ref(1);
@@ -50,7 +56,7 @@ export default {
     const selectedStatus = ref('all');
     const selectedDates = ref({ startDate: null, endDate: null });
     const searchTerm = ref('');
-
+    const loading = ref(true);
     const showModal = ref(false);
 
     const handleCreate = (formData) => {
@@ -106,12 +112,48 @@ export default {
         offsets.value[page] = response.offset;
         hasNext.value = !!response.offset
       } else {
+        totalAppointment.value = response.totalRecords;
         appointments = null;
         offsets.value[page] = response.offset;
       }
 
 
       records.value = appointments;
+    };
+
+    // const fetchContactsRecords = async () => {
+    //   try {
+    //     contacts.value = await AirtableService.getContacts();
+    //   } catch (error) {
+    //     console.error('Failed to load contacts:', error);
+    //   }
+    // };
+
+    // const fetchAgentDetails = async () => {
+    //   try {
+    //     agents.value = await AirtableService.getAgentsDetails();
+
+    //     console.log("allAgents", agents.value);
+    //   } catch (error) {
+    //     console.error('Failed to load contacts:', error);
+    //   }
+
+    // };
+
+    const fetchData = async () => {
+      try {
+        const [agentData, contactData] = await Promise.all([
+          AirtableService.getAgentsDetails(),
+          AirtableService.getContacts(),
+        ]);
+        agents.value = agentData;
+        contacts.value = contactData;
+        await fetchRecords(currentPage.value);
+      } catch (error) {
+        console.error('Failed to fetch initial data:', error);
+      } finally {
+        loading.value = false; // Set loading to false after all data is fetched
+      }
     };
 
     const handleSearch = (newSearchTerm) => {
@@ -156,13 +198,16 @@ export default {
       fetchRecords(currentPage.value);
     }, { immediate: true });
 
-    onMounted(async () => {
-      // await calculateTotalPages();
-      await fetchRecords(currentPage.value);
-    });
+    onMounted(fetchData);
+    
+    // onMounted(async () => {
+    //   await fetchAgentDetails();
+    //   fetchContactsRecords();
+    //   await fetchRecords(currentPage.value);
+    // });
 
     return {
-      records, currentPage, totalAppointment, totalPages, hasNext, handlePageChange, handleSelectedAgents, handleStatusChange, handleDateChange, handleSearch,  showModal, handleCreate
+      loading, records, contacts, agents, currentPage, totalAppointment, totalPages, hasNext, handlePageChange, handleSelectedAgents, handleStatusChange, handleDateChange, handleSearch, showModal, handleCreate
     };
   }
 };

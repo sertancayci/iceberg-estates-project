@@ -1,13 +1,13 @@
 <template>
 
-    <form class="w-[21.875rem]">
+    <form class="w-full">
         <div class="flex">
             <div class="relative w-full">
                 <input type="search" v-model="searchTerm" @input="emitSearch"
-                    class="block p-2.5 w-full h-10 z-20 text-sm text-gray-900 rounded-l-lg border rounded-r-lg border-gray-300 focus:outline-none focus:ring-gray-300 focus:border-black placeholder:-translate-x-[-8rem] placeholder:text-black"
+                    class="block p-2.5 w-full h-10 z-20 text-sm text-gray-900 rounded-l-lg border rounded-r-lg border-gray-400 focus:outline-none focus:ring-gray-300 focus:border-black placeholder:-translate-x-[-40%] placeholder:text-black"
                     placeholder="Search..." required />
                 <button type="submit"
-                    class="absolute top-0 end-0 h-full p-2.5 text-sm font-medium text-white bg-black rounded-r-lg border border-gray-300 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-300">
+                    class="absolute top-0 end-0 h-full p-2.5 text-sm font-medium text-white bg-black rounded-r-lg border border-gray-400 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-400">
                     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                         viewBox="0 0 20 20">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
