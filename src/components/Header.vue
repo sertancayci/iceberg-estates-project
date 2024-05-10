@@ -1,5 +1,5 @@
 <template>
-    <div class="grid grid-cols-12 sm:px-5 py-4 bg-white shadow gap-3 lg:gap-0">
+    <div class="grid grid-cols-12 px-3 sm:px-5 py-4 bg-white shadow gap-3 lg:gap-0">
         <!-- Tags and Status Select -->
         <div class="col-span-12 sm:col-span-6 lg:col-span-2 flex items-center flex-wrap group  lg:mt-[-0.25rem]">
             <AgentsTag :agents="allAgents" :selectable="true" @agent-selected="handleSelectedAgents" />

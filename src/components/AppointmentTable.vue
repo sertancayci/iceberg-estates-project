@@ -1,8 +1,8 @@
 <template>
     <div @click="emitEdit(appointment)"
-        class="grid grid-cols-12 items-center p-4 bg-white rounded-lg border border-gray-400 mb-4 cursor-pointer">
+        class="grid grid-cols-12 items-center p-2 sm:p-4 bg-white rounded-lg border border-gray-400 mb-4 cursor-pointer">
         <div class="col-span-12 sm:col-span-6 lg:col-span-3 flex items-center justify-start">
-            <div class="pl-9">
+            <div class="md:pl-9">
                 <div class="flex"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                         stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-gray-500">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -39,7 +39,7 @@
             <p class="text-[#171717] pl-6 font-semibold">{{ appointment.appointment_address }}</p>
         </div>
         <div
-            class="col-span-12 sm:col-span-6 lg:col-span-3 bg-[#ec1e80] border radius-xl flex flex-row justify-between rounded-lg p-1  w-[23rem]">
+            class="col-span-12 sm:col-span-6 lg:col-span-3 bg-[#ec1e80] border radius-xl flex flex-row justify-between rounded-lg p-1  sm:w-[23rem]">
             <div class="flex ml-1 px-3 py-2 rounded-lg bg-white w-[10rem] "
                 :class="{ 'justify-between': appointmentStatus.statusText === 'Upcoming', 'justify-center': appointmentStatus.statusText !== 'Upcoming' }">
                 <span class="text-center font-semibold text-sm" :class="`${appointmentStatus.color}`">
@@ -54,7 +54,7 @@
             </p>
 
         </div>
-        <div class="col-span-12 sm:col-span-6 lg:col-span-3 justify-center items-center flex -space-x-2 mt-2">
+        <div class="col-span-12 sm:col-span-6 lg:col-span-3 pl-2 sm:pl-0 sm:justify-center items-center flex sm:-space-x-2 mt-2">
             <AgentsTag :agents="appointmentAgentDetails" :displayCount="4" />
         </div>
     </div>

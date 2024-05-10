@@ -14,7 +14,7 @@
                         <p class="text-[#171717] pl-2 font-semibold">{{ appointment.appointment_address }}</p>
                     </div>
                     <div
-                        class="col-span-12 sm:col-span-6 lg:col-span-3 bg-[#ec1e80] border radius-xl flex flex-row justify-between rounded-2xl p-1  w-[23rem]">
+                        class="col-span-12 sm:col-span-6 lg:col-span-3 bg-[#ec1e80] border radius-xl flex flex-row justify-between rounded-2xl p-1  sm:w-[23rem]">
                         <div class="flex ml-1 px-3 py-2 rounded-2xl bg-white w-[10rem] "
                             :class="{ 'justify-between': appointmentStatus(appointment).statusText === 'Upcoming', 'justify-center': appointmentStatus(appointment).statusText !== 'Upcoming' }">
                             <span class="text-center font-semibold text-sm"
