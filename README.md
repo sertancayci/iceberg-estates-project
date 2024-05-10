@@ -1,32 +1,34 @@
-# vue-project
+# iceberg-estates-project
+Iceberg Estates Appointments project
 
-This template should help get you started developing with Vue 3 in Vite.
+# Vue Appointment Manager
 
-## Recommended IDE Setup
+This project is a Vue.js application designed to manage appointments using Airtable as the backend. It allows users to create, edit, and view appointments interactively. The application is built with Vue 3 and utilizes Axios for API requests.
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+## Features
 
-## Customize configuration
+- **Create Appointments**: Users can add new appointments with details such as date, time, contact info, and agents.
+- **Edit Appointments**: Existing appointments can be updated or modified.
+- **View Appointments**: Appointments are displayed in a paginated table, and details can be viewed in a modal window.
+- **Search and Filter**: Appointments can be filtered by date, agent, and other criteria.
+- **Responsive Design**: The application is responsive, making it accessible on both desktop and mobile devices.
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+## Technology Stack
+
+- **Vue 3**: Frontend framework for building user interfaces.
+- **Vuex**: State management library for Vue.js.
+- **Vue Router**: For routing and navigation.
+- **Axios**: Promise based HTTP client for making API requests.
+- **Airtable**: Backend database used for storing appointment data.
 
 ## Project Setup
 
-```sh
+```bash
+# install dependencies
 npm install
-```
 
-### Compile and Hot-Reload for Development
+# serve with hot reload at localhost:8080
+npm run serve
 
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
+# build for production with minification
 npm run build
-```
-
-# iceberg-estates
-iceberg estates appointment challenge
