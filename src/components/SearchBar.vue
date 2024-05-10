@@ -4,7 +4,7 @@
         <div class="flex">
             <div class="relative w-full">
                 <input type="search" v-model="searchTerm" @input="emitSearch"
-                    class="block p-2.5 w-full h-10 z-20 text-sm text-gray-900 rounded-l-lg border rounded-r-lg border-gray-400 focus:outline-none focus:ring-gray-300 focus:border-black placeholder:-translate-x-[-40%] placeholder:text-black"
+                    class="block p-2.5 w-full h-12 z-20 text-sm text-gray-900 rounded-l-lg border rounded-r-lg border-gray-400 focus:outline-none focus:ring-gray-300 focus:border-black placeholder:-translate-x-[-40%] placeholder:text-black"
                     placeholder="Search..." required />
                 <button type="submit"
                     class="absolute top-0 end-0 h-full p-2.5 text-sm font-medium text-white bg-black rounded-r-lg border border-gray-400 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-400">

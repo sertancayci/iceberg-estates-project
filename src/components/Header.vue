@@ -1,11 +1,11 @@
 <template>
-    <div class="grid grid-cols-12 md:px-5 py-4 bg-white shadow">
+    <div class="grid grid-cols-12 sm:px-5 py-4 bg-white shadow gap-3 lg:gap-0">
         <!-- Tags and Status Select -->
-        <div class="col-span-12 md:col-span-6 lg:col-span-2 flex items-center flex-wrap group  lg:mt-[-0.25rem]">
+        <div class="col-span-12 sm:col-span-6 lg:col-span-2 flex items-center flex-wrap group  lg:mt-[-0.25rem]">
             <AgentsTag :agents="allAgents" :selectable="true" @agent-selected="handleSelectedAgents" />
         </div>
 
-        <div class="col-span-12 md:col-span-6 lg:col-span-2">
+        <div class="col-span-12 sm:col-span-6 lg:col-span-2">
             <select v-model="selectedStatus" @change="handleStatusChange"
                 class="h-12 w-full rounded-lg border border-solid border-gray-400  px-4 text-sm font-semibold">
                 <option value="all">All Statuses</option>
@@ -15,8 +15,8 @@
             </select>
         </div>
         <!-- Date Range Picker -->
-        <div class="col-span-12 md:col-span-6 lg:col-span-3 lg:ml-2.5 gap-x-2">
-            <div class="flex gap-x-2">
+        <div class="col-span-12 sm:col-span-6 lg:col-span-3 lg:ml-2.5 gap-x-2">
+            <div class="flex flex-col lg:flex-row  gap-2">
                 <DatePicker label="From:" ref-name="startDateInput" :model-value="startDate"
                     @update:modelValue="handleStartDateChange" />
                 <DatePicker label="To:" ref-name="endDateInput" :model-value="endDate"
@@ -24,7 +24,7 @@
             </div>
         </div>
         <!-- Search Bar -->
-        <div class="relative col-span-12 md:col-span-6 lg:col-span-5 flex justify-self-end w-[21.875rem]">
+        <div class="relative col-span-12 sm:col-span-6 lg:col-span-5 flex justify-self-end w-[21.875rem]">
             <SearchBar @search="handleSearch" />
         </div>
     </div>
@@ -42,7 +42,6 @@ export default {
     name: 'Header',
     props: {
         handleSelectedAgentsChange: Function,
-        handleSearch: Function,
         allAgents: Array,
     },
     components: {

@@ -1,79 +1,107 @@
 <template>
+    <div class="flex flex-col bg-white">
+        <div class="select-container cursor-pointer flex flex-row justify-between border border-gray-400 rounded-lg p-1 px-3 pt-0 h-12"
+            :class="label ? 'items-end' : 'items-center'" @click="toggleDropdown">
+            <div class="w-full">
+                <!-- if label has call <label else none -->
 
-    <div class="select-container my-3 date-input-container flex flex-row justify-between items-end border border-gray-400 rounded-lg p-1 px-3 pt-0 h-12"
-        @click="toggleDropdown">
-        <div class="flex flex-col">
-            <label :for="label" class="date-label text-xs text-gray-900">{{ label }}</label>
-            <div class="selected-value" :class="{ 'is-active': dropdownOpen }">
-                {{ selectedOption[labelKey] || placeholder }}
+                <label v-if="label" :for="label" class="text-xs text-gray-900">{{ label }}</label>
+                <div class="selected-value h-6 text-sm font-semibold" :class="{ 'is-active': dropdownOpen }">
+                    <!-- {{ selectedOption[labelKey] || placeholder }} {{ selectedOption[labelSubKey] || "" }} -->
+                    <div v-if="multiple">
+                        <span v-for="(option, index) in selectedOptions" :key="option.id">
+                            {{ option[labelKey] }} {{ option[labelSubKey] }}
+                            <span v-if="index !== selectedOptions.length - 1">, </span>
+                        </span>
+                    </div>
+                    <div v-else>
+                        {{ selectedOptions[labelKey] || placeholder }} {{ selectedOptions[labelSubKey] }}
+                    </div>
+                </div>
             </div>
-            <div v-if="dropdownOpen" class="options-list">
-
-                <option v-for="option in options" :key="option.id" class="option" @click.stop="selectOption(option)">
-                    {{ option[labelKey] }}
-                    {{ option[labelSubKey] ? option[labelSubKey] : '' }}
-                </option>
+            <div>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                    class="w-6 h-6 text-gray-600">
+                    <path fill-rule="evenodd"
+                        d="M12.53 16.28a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 0 1 1.06-1.06L12 14.69l6.97-6.97a.75.75 0 1 1 1.06 1.06l-7.5 7.5Z"
+                        clip-rule="evenodd" />
+                </svg>
             </div>
         </div>
-        <!-- <select required>
-            <option disabled value="">Select Agent</option>
-            <option v-for="option in options" :key="option.id" :value="option.id">
 
-                {{ option[labelKey] }}
-                {{ option[labelSubKey] ? option[labelSubKey] : '' }}
-            </option>
-        </select> -->
-
+        <div v-if="dropdownOpen" class="card border options-list">
+            <div v-for="option in options" :key="option.id" class="option" @click.stop="selectOption(option)">
+                {{ option[labelKey] }} {{ option[labelSubKey] ? option[labelSubKey] : '' }}
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
-import { ref } from 'vue';
-
-const dropdownOpen = ref(false);
+import { ref, computed } from 'vue';
 
 export default {
     name: 'SelectBox',
     props: {
+        multiple: Boolean,
         options: {
             type: Array,
             default: () => []  // Ensure default is an empty array
         },
         label: String,
         placeholder: String,
-        modelValue: [String, Number, Object],
+        modelValue: {
+            type: [Array, String, Number, Object],
+            default: () => [],
+        },  // This value is passed down from the parent and should be handled as a prop.
         labelKey: String,
         labelSubKey: String
     },
-    data() {
-        return {
-            selectedOption: {}
-        };
-    },
-    watch: {
-        modelValue: {
-            immediate: true,
-            handler(value) {
-                this.selectedOption = this.options.find(option => option.id === value) || {};
+    setup(props, { emit }) {
+        const dropdownOpen = ref(false);
+
+        const selectedOptions = computed(() => {
+            if (props.multiple) {
+                return props.options.filter(option => props.modelValue.includes(option.id));
+            } else {
+                return props.options.find(option => option.id === props.modelValue) || {};
             }
+        });
+
+        function selectOption(option) {
+            if (props.multiple) {
+                const newValue = [...props.modelValue];
+                const index = newValue.indexOf(option.id);
+                if (index === -1) {
+                    newValue.push(option.id);
+                } else {
+                    newValue.splice(index, 1);  // Allow deselecting
+                }
+                console.log("New value:", newValue);
+                emit('update:modelValue', newValue);
+            } else {
+                emit('update:modelValue', option.id);
+            }
+            dropdownOpen.value = false;  // Close dropdown on selection
+            emit('handleInput');
         }
-    },
-    mounted() {
-        console.log('mounted', this.options)
-    },
-    methods: {
-        toggleDropdown() {
-            console.log('toggleDropdown', dropdownOpen.value)
+
+        function toggleDropdown() {
+            console.log("Dropdown state:", dropdownOpen.value);
             dropdownOpen.value = !dropdownOpen.value;
-        },
-        selectOption(option) {
-            selectedOption.value = option;
-            emit('update:modelValue', option.id);
-            dropdownOpen.value = false;
-        },
-    },
+        }
+
+
+        return {
+            dropdownOpen,
+            selectedOptions,
+            toggleDropdown,
+            selectOption
+        };
+    }
 };
 </script>
+
 
 
 <style scoped>
@@ -85,33 +113,29 @@ export default {
 }
 
 .selected-value {
-    padding: 8px;
-    background: #f9f9f9;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.selected-value.is-active {
-    background: #e0e0e0;
-    /* Active state background */
-}
-
 .options-list {
-    width: 100%;
     background: white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 10;
+    padding: 20px;
+    border-radius: 10px;
+    width: 100%;
+    height: 20rem;
+    max-width: 40rem;
+    max-height: 50rem;
+    overflow: scroll
 }
 
 .option {
     padding: 8px;
-    border-top: 1px solid #eee;
     background: #FFF;
     transition: background 0.3s;
+}
 
-    &:hover {
-        background: #f0f0f0;
-    }
+.option:hover {
+    background: #f0f0f0;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
-    <div class=" grid grid-cols-12 items-center p-4 bg-white rounded-lg border border-gray-400 mb-4">
-        <div class="col-span-3 flex items-center justify-start">
-            <!-- Left Section: Details -->
+    <div @click="emitEdit(appointment)"
+        class="grid grid-cols-12 items-center p-4 bg-white rounded-lg border border-gray-400 mb-4 cursor-pointer">
+        <div class="col-span-12 sm:col-span-6 lg:col-span-3 flex items-center justify-start">
             <div class="pl-9">
                 <div class="flex"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                         stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-gray-500">
@@ -29,19 +29,19 @@
 
             </div>
         </div>
-        <div class="col-span-3 flex">
+        <div class="col-span-12 sm:col-span-6 lg:col-span-3 flex">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-6 h-6 text-gray-500">
+                stroke="currentColor" class="w-6 h-6 text-gray-500 flex-shrink-0">
                 <path stroke-linecap="round" stroke-linejoin="round"
                     d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
             </svg>
 
             <p class="text-[#171717] pl-6 font-semibold">{{ appointment.appointment_address }}</p>
         </div>
-        <div class="col-span-3 bg-[#ec1e80] border radius-xl flex flex-row justify-between rounded-lg p-1  w-[23rem]">
+        <div
+            class="col-span-12 sm:col-span-6 lg:col-span-3 bg-[#ec1e80] border radius-xl flex flex-row justify-between rounded-lg p-1  w-[23rem]">
             <div class="flex ml-1 px-3 py-2 rounded-lg bg-white w-[10rem] "
-            :class="{'justify-between': appointmentStatus.statusText === 'Upcoming', 'justify-center': appointmentStatus.statusText !== 'Upcoming'}"
-            >
+                :class="{ 'justify-between': appointmentStatus.statusText === 'Upcoming', 'justify-center': appointmentStatus.statusText !== 'Upcoming' }">
                 <span class="text-center font-semibold text-sm" :class="`${appointmentStatus.color}`">
                     {{ appointmentStatus.statusText }}
 
@@ -53,9 +53,9 @@
             <p class="text-white font-semibold place-self-center pr-6"> {{ formatDate(appointment.appointment_date) }}
             </p>
 
-        </div>     
-        <div class="col-span-3 justify-center items-center flex -space-x-2 mt-2">
-            <AgentsTag :agents="appointmentAgentDetails" :displayCount="4"/>
+        </div>
+        <div class="col-span-12 sm:col-span-6 lg:col-span-3 justify-center items-center flex -space-x-2 mt-2">
+            <AgentsTag :agents="appointmentAgentDetails" :displayCount="4" />
         </div>
     </div>
 </template>
@@ -65,14 +65,13 @@ import AirtableService from '../api/AirtableService';
 import AgentsTag from './AgentsTag.vue';
 
 export default {
-    name: 'AppointmentRow',
+    name: 'AppointmentTable',
     props: {
-        appointment: {
-            type: Object,
-            required: true
-        }
+        appointment: Object
     },
-   
+    components: {
+        AgentsTag
+    },
     data() {
         return {
             appointmentAgentDetails: []
@@ -94,6 +93,10 @@ export default {
         }
     },
     methods: {
+        emitEdit(appointment) {
+            console.log("edit", appointment);
+            this.$emit('edit', appointment);
+        },
         formatDate(date) {
             const dateObj = new Date(date);
             const formattedDate = dateObj.toLocaleDateString('en-GB', {
@@ -128,11 +131,6 @@ export default {
         if (this.appointment.agent_id) {
             this.fetchAgentDetails(this.appointment.agent_id);
         }
-
-
-    },
-     components: {
-        AgentsTag
     },
 };
 </script>

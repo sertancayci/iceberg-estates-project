@@ -1,5 +1,5 @@
 <template>
-    <div class="date-input-container flex flex-row justify-between items-end border border-gray-400 rounded-lg p-1 px-3 pt-0 h-12"
+    <div class="date-input-container bg-white flex flex-row justify-between items-end border border-gray-400 rounded-lg p-1 px-3 pt-0 h-12"
         @click="toggleDatePicker">
         <div class="flex flex-col">
             <label :for="label" class="date-label text-xs text-gray-900">{{ label }}</label>
@@ -40,9 +40,11 @@ export default {
         initDatePicker() {
             if (!this.picker) { // Initialize flatpickr only if it hasn't been initialized yet
                 this.picker = flatpickr(this.$refs[this.refName], {
+                    enableTime: true,
                     altInput: true,
-                    altFormat: "F j, Y",
-                    dateFormat: "Y-m-d",
+                    altFormat: "F j, Y H:i",
+                    dateFormat: "Y-m-d H:i",
+                    time_24hr: true,
                     onChange: this.onDateChange
                 });
             }

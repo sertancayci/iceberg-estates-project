@@ -1,71 +1,63 @@
 <template>
-    <div class="date-input-container flex flex-row items-end border border-gray-400 rounded-lg p-1 px-3 pt-0 h-12"
-        @click="toggleDatePicker">
-        <div class="flex flex-col">
-            <label :for="label" class="date-label text-xs text-gray-900">{{ label }}</label>
-            <input type="text" :ref="refName" :value="modelValue" readonly
-                class="form-control h-6 text-sm font-semibold placeholder:text-black placeholder:text-sm focus:outline-none"
-                placeholder="Select Date">
+    <div @click="focusInput"
+        class="bg-white flex flex-row justify-between items-center border focus:outline-none border-gray-400 rounded-lg p-1 px-3 pt-0 h-12 mt-3">
+        <div class="flex flex-col w-full bg-white">
+            <label :for="id" class="date-label text-xs text-gray-900">{{ label }}</label>
+            <input type="text" :ref="id" :id="id" v-model="localValue" @input="handleInput"
+                class="form-control bg-white w-full h-6 text-sm font-semibold placeholder:text-black placeholder:text-sm focus:outline-none">
         </div>
-        <a class="input-button" title="toggle">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+        <div name="icon">
+            <!-- Default icon slot -->
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                class="w-6 h-6 text-gray-600">
+                <path
+                    d="M11.47 3.841a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.061l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 101.061 1.06l8.69-8.689Z" />
+                <path
+                    d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H5.625a1.875 1.875 0 01-1.875-1.875v-6.198a2.29 2.29 0 00.091-.086L12 5.432Z" />
             </svg>
-
-        </a>
+        </div>
     </div>
 </template>
 
 <script>
-import flatpickr from 'flatpickr';
-
 export default {
-    name: 'DatePicker',
+    name: 'AddressInput',
     props: {
-        label: String,
-        refName: String,
-        modelValue: String
+        modelValue: String,
+        label: {
+            type: String,
+            default: 'Address'
+        },
+        id: {
+            type: String,
+            required: true
+        }
     },
+    emits: ['update:modelValue'],
     data() {
         return {
-            picker: null, // Store the flatpickr instance
+            localValue: this.modelValue
         };
     },
-    mounted() {
-        this.initDatePicker();
+    watch: {
+        modelValue(newVal) {
+            this.localValue = newVal;
+        },
+        localValue(newVal) {
+            this.$emit('update:modelValue', newVal);
+        }
     },
     methods: {
-        initDatePicker() {
-            if (!this.picker) { // Initialize flatpickr only if it hasn't been initialized yet
-                this.picker = flatpickr(this.$refs[this.refName], {
-                    altInput: true,
-                    altFormat: "F j, Y",
-                    dateFormat: "Y-m-d",
-                    onChange: this.onDateChange
-                });
-            }
+        focusInput() {
+            this.$refs[this.id].focus();
         },
-        onDateChange(selectedDates, dateStr) {
-            this.$emit('update:modelValue', dateStr);
-        },
-        toggleDatePicker() {
-            if (this.picker) {
-                this.picker.open(); // Open flatpickr
-            }
-        }
-    },
-    beforeDestroy() {
-        if (this.picker) {
-            this.picker.destroy(); // Cleanup flatpickr instance when component is destroyed
+        handleInput(event) {
+            this.$emit('input', event.target.value);
         }
     }
-};
+}
 </script>
 
 <style scoped>
-.date-input-container {
-    cursor: pointer;
-}
+
 </style>
