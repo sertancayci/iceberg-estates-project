@@ -16,8 +16,6 @@ This project is a Vue.js application designed to manage appointments using Airta
 ## Technology Stack
 
 - **Vue 3**: Frontend framework for building user interfaces.
-- **Vuex**: State management library for Vue.js.
-- **Vue Router**: For routing and navigation.
 - **Axios**: Promise based HTTP client for making API requests.
 - **Airtable**: Backend database used for storing appointment data.
 
@@ -27,8 +25,5 @@ This project is a Vue.js application designed to manage appointments using Airta
 # install dependencies
 npm install
 
-# serve with hot reload at localhost:8080
-npm run serve
-
-# build for production with minification
-npm run build
+# run
+npm run dev
