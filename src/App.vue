@@ -29,7 +29,6 @@
       <Pagination :totalPages="totalPages" :currentPage="currentPage" :hasNext="hasNext" @change="handlePageChange" />
     </div>
 
-
     <AppointmentModal :contacts="contacts" :all-agents="agents" :isVisible="showModal" :modalMode="modalMode"
       :currentAppointment="currentAppointment" @close="handleModalClose" @update:appointments="fetchRecords"
       @submit="handleCreate" />
@@ -83,9 +82,7 @@ export default {
     };
 
     const handleCreate = (formData) => {
-      // console.log('Form data submitted:', formData);
       showModal.value = false;
-      // Here you would handle the API call to create an appointment
     };
 
 
@@ -128,7 +125,6 @@ export default {
       });
 
       if (response.records.length > 0) {
-        // console.log("total records", response.totalRecords);
         appointments = response.records;
         records.value = response.records;
         totalAppointment.value = response.totalRecords;

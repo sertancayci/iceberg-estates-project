@@ -77,7 +77,6 @@ export default {
                 } else {
                     newValue.splice(index, 1);  // Allow deselecting
                 }
-                console.log("New value:", newValue);
                 emit('update:modelValue', newValue);
             } else {
                 emit('update:modelValue', option.id);
@@ -87,7 +86,6 @@ export default {
         }
 
         function toggleDropdown() {
-            console.log("Dropdown state:", dropdownOpen.value);
             dropdownOpen.value = !dropdownOpen.value;
         }
 

@@ -51,8 +51,6 @@ export default {
     },
     computed: {
         pageNumbers() {
-            console.log("totalPages", this.totalPages);
-            console.log("currentPage", this.currentPage);
             const pages = [];
             for (let i = 1; i <= this.totalPages; i++) {
                 if (i === 1 || i === this.currentPage || (i >= this.currentPage - 1 && i <= this.currentPage + 1)) {

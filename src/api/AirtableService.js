@@ -169,8 +169,6 @@ const getAgentsDetails = async (agentIds = []) => {
     apiUrl += `&filterByFormula=OR(${filterByIds})`;
   }
 
-  console.log("apiUrl getAgentsDetails", apiUrl);
-
   try {
     let offset = "";
     do {
@@ -201,7 +199,6 @@ const getRelatedAppointmentsByContactId = async (contactId) => {
       id: record.id,
       ...record.fields,
     }));
-    console.log("responseRA", response);
   } catch (error) {
     console.error("Error fetching related appointments:", error);
     throw error;
@@ -211,8 +208,6 @@ const getRelatedAppointmentsByContactId = async (contactId) => {
 
 const getContactIdById = async (id) => {
   try {
-    console.log("getContactIdById", id);
-
     const formula = `RECORD_ID() = '${id}'`;
     const response = await axios.get(
       `${API_URL}/Contacts?filterByFormula=${encodeURIComponent(formula)}`,

@@ -94,7 +94,6 @@ export default {
     },
     methods: {
         emitEdit(appointment) {
-            console.log("edit", appointment);
             this.$emit('edit', appointment);
         },
         formatDate(date) {
@@ -121,7 +120,6 @@ export default {
         async fetchAgentDetails(appointmentAgentIds) {
             const agentIds = appointmentAgentIds;
             this.appointmentAgentDetails = await AirtableService.getAgentsDetails(agentIds);
-            // console.log("appointmentAgentDetails", this.appointmentAgentDetails);
         },
     },
     onMounted() {

@@ -102,17 +102,13 @@ export default {
         async fetchRelatedAppointments(contactId,currentAppointmentId) {
             if (this.contactId) {
                 const contacts = await AirtableService.getContactIdById(contactId);
-
-                console.log('Contacts:', contacts);
                 if (contacts.length > 0) {
                     const contactId = contacts[0].contact_id;
                      const relatedAppointmentsFetch = await AirtableService.getRelatedAppointmentsByContactId(contactId);
-                    console.log("appıd", this.currentAppointmentId);
-                  
+              
                     this.relatedAppointments = relatedAppointmentsFetch.filter(appointment => {
                         return appointment.id !== currentAppointmentId;  // Exclude the current appointment
                     }).map(appointment => {
-                        console.log('Processing appointment:', appointment);
                         return {
                             ...appointment,
                             appointment_date: appointment.appointment_date || 'No date provided'
@@ -130,7 +126,6 @@ export default {
         async fetchAgentDetails(appointmentAgentIds) {
             const agentIds = appointmentAgentIds;
             this.appointmentAgentDetails = await AirtableService.getAgentsDetails(agentIds);
-            console.log("appointmentAgentDetails1", this.appointmentAgentDetails);
         },
     }
 };

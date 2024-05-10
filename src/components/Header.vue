@@ -76,12 +76,10 @@ export default {
 
         handleSearch(query) {
             this.searchQuery = query;
-            console.log("searchQuery", this.searchQuery);
             this.$emit('search', this.searchQuery);
         },
 
         handleStatusChange() {
-            console.log("selectedStatus", this.selectedStatus);
             this.$emit('status-change', this.selectedStatus);
         },
 

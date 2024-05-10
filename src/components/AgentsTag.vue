@@ -11,7 +11,7 @@
 
     </div>
     <!-- Display +count if there are more agents than displayed -->
-    <div v-if="agents.length > displayCount" class="bg-white p-[5px] rounded-[50%]  ml-[-10px] z-10 "
+    <div v-if="agents.length > displayCount" class="cursor-pointer bg-white p-[5px] rounded-[50%]  ml-[-10px] z-10 "
         @click="toggleAgentVisibility">
         <div class="w-10 h-10 flex justify-center items-center rounded-full bg-gray-200 text-black">
             {{ allAgentsVisible ? '>' : '+' + (agents.length - displayCount) }}
@@ -26,15 +26,13 @@ export default {
     name: 'AgentsTag',
     props: {
         agents: Array,
-        selectable: {
-            type: Boolean,
-            default: false
-        },
+        selectable: Boolean,
         displayCount: {
             type: Number,
             default: 5
         }
     },
+    emits: ['agentSelected'], 
     data() {
         return {
             selectedAgents: [],
@@ -53,6 +51,7 @@ export default {
                 cursor: this.selectable ? 'pointer' : 'default',
             };
         },
+
         toggleSelection(agent) {
             const index = this.selectedAgents.indexOf(agent.id);
             if (index === -1) {
@@ -62,6 +61,7 @@ export default {
             }
             this.$emit('agent-selected', agent.number);
         },
+
         isSelected(agent) {
             return this.selectedAgents.includes(agent.id);
         },
